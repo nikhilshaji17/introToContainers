@@ -1,0 +1,26 @@
+Containers used to be called Linux Jails.
+
+They are essentially 3 linux features taped together. 
+1. Jailed processes
+2. Control groups
+3. Namespaces
+
+We will jail a process, keep it resources to itself, and adding it to a C group.
+
+Why containers:
+Earlier, you had to run your code directly on your own server. This means you would have
+  to take care of the OS and the hardware itself, including who can access the servers, the
+  temperature of the room, power thats served to the servers etc.
+
+  This means you would have to buy servers, then pay someone to take care of them, or take
+  care of them yourself.
+
+The next step was virtual machines, we can now take our server, and split it into virtual 
+  machines, to run multiple applications
+
+Now, you don't need to keep buying new servers for new applications. However, you still need to:
+  a. Security patch your own servers
+  b. Manage your own OS
+
+Containers take the concept of virtual machines, but they avoid the need to keep duplicating
+  operating systems for each virtual machines. So they are lighter
