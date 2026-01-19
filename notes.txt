@@ -24,3 +24,25 @@ Now, you don't need to keep buying new servers for new applications. However, yo
 
 Containers take the concept of virtual machines, but they avoid the need to keep duplicating
   operating systems for each virtual machines. So they are lighter
+
+chroot:
+  A command that allows you to "change root" of a process. This makes it such that the process
+    now thinks that it is root, and cannot access anything before it. (Jailed process)
+
+
+docker ps = Tells you which containers are running.
+
+docker run -it --name docker-host --rm --privileged ubuntu:jammy
+
+run = to run the container
+
+-it = to make it interactive and not run in the background
+
+--name docker-host = to give it a recognizable name
+
+--rm = throw away all the information about this container once we're done.
+
+--privileged = to give it root privilege (not recommended, only for current situation)
+
+ubuntu:jammy = the distribution and its version
+
