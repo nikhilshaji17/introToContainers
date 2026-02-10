@@ -46,3 +46,22 @@ run = to run the container
 
 ubuntu:jammy = the distribution and its version
 
+ldd bin/bash:
+  Tells you all the libraries that you need to bring with bash so that bash can actually run
+
+This is useful when you need to find what all libraries you need to copy into your new
+  container.
+
+Not only do we copy ls, or cat, from bin/ls or bin/cat, we also
+  need the libraries they depend on, so we use ldd to find the libraries,
+  and place them in lib and lib64
+
+Although using jailed processes prevents multiple users from accessing each 
+  other file systems, a user can still see what all processes are running
+  throughout the system by using ps aux, and kill them if required.
+
+Namespaces:
+By using namespaces, a jailed process cannot see what other processes are running
+
+We create the namespace using the keyword unshare. unshare creates a new isolated namespace from its parent
+
