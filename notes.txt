@@ -65,3 +65,10 @@ By using namespaces, a jailed process cannot see what other processes are runnin
 
 We create the namespace using the keyword unshare. unshare creates a new isolated namespace from its parent
 
+So what have we done so far:
+chroot => Now the process thinks it's the root process
+unshare => Now the process does not have access to other processes
+
+But what if a chrooted and unshared process is manipulated such that it uses 100 percent
+  of the resources of the server? Other users can no longer use this any more.
+
