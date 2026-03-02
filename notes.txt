@@ -70,5 +70,74 @@ chroot => Now the process thinks it's the root process
 unshare => Now the process does not have access to other processes
 
 But what if a chrooted and unshared process is manipulated such that it uses 100 percent
-  of the resources of the server? Other users can no longer use this any more.
+  of the resources of the server? Other users can no longer use this any more. This could happen
+  because of a memory leak in someone's program, or because of a bad actor
+
+This is where cgroups come in. Invented in google, this basically assigns a limited amount of CPU, RAM
+  and resources to a particular process.
+
+cgroups are like a pseudo file system. You will read and write to config files that will manage your cgroups.
+Every process belongs to exactly one cgroup.
+
+By using cgroups, we can limit the RAM per container, the amount of CPU usage, and the number of 
+processes that can be active at once (to prevent fork bombs)
+
+In short, containers = chroot (to create a box), unshare (to avoid looking at other processes) and
+  cgroups (to limit the amount of resources used)
+
+Docker:
+
+Image = A pre-made container that you can use. Think of this like a class from C++, you can create a lot of
+  objects.
+
+An image just describes the state of a container.
+
+1. docker run will start a new shell
+2. docker exec will run the command that you want within a container
+  example: docker exec container_name ls => Shows you the output of what happens after you run
+    ls within the container.
+3. docker run --detach (-dit) => runs in the background
+4. docker attach => attaches you to a running container
+
+Tags:
+docker run -it --name docker-host --rm --privileged ubuntu:jammy
+
+:jammy is the tag. It is just a name placed over a number. jammy = 22.04 
+
+In general, your development container must contain everything (debugging tools, full OS), so let it be heavy.
+Prod container can contain only the essentials. This way, you minimize the amount of security vulnerabilities
+for your application.
+
+Pull:
+Similar to git pull, allows you to pre-fetch a container so you can run it later.
+
+Docker pause/unpause:
+Allows you to pause and resume a container
+
+Docker restart:
+restarts a container
+
+Building/Creating your own containers:
+We use a Dockerfile to create an image. They are a special set of instructions that help you create
+  your own container.
+
+FROM node:20
+
+CMD [ "node", "-e", "console.log(\"hello\")" ]
+
+Above is a basic container. FROM and CMD are the instructions.
+Each instruction creates a new layer, and each layer has a hash. Each layer (hash) is a valid container
+  in and of itself.
+
+One very useful thing about layers having hashes is because it helps with caching. If you have 70 layers,
+  and only the last 2 changed, you don't have to rebuild the entire container, you just need to run the last
+  2 layers.
+
+There can only be 1 CMD instruction in a Dockerfile. If there are mutiple, it executes the last one.
+CMD instruction will be executed after the container is built, not during the build process.
+
+docker build . --tag my-node-app => . means current directory, --tag means provide the following argument
+  as the name. This way, you do not have to remember the hash value.
+
+docker build creates an image. docker run will create a container.
 
