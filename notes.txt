@@ -179,3 +179,12 @@ Note: It is usually recommended to download your package.json dependencies early
 
 Note 2: Using alpine/slim distro's can help reduce the size of the container, thus improving build time.
   Don't over optimize this step, but try to use when possible.
+
+MULTI-STAGE BUILDS:
+Some packages are unnecessary for our production container (npm), and don't have to be installed on our prod.
+  container.
+
+
+DISTROLESS:
+This is the most barebones you can get. There is no package manager here, so you'd need to install it yourself.
+  
