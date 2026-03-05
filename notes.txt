@@ -141,3 +141,41 @@ docker build . --tag my-node-app => . means current directory, --tag means provi
 
 docker build creates an image. docker run will create a container.
 
+When running a container, by default, its ports are not exposed. So you need to expose them 
+  yourself.
+
+docker run -p [host_port]:[container_port] [image_name] => we use this command. -p means publish
+
+Example:
+docker run --init --publish 3000:3000 --rm --name na my-node-app:3
+
+--name na mean name the container na
+my-node-app:3 means use this image to create the container
+
+USER node: This is a node container specific thing. Prevents a user from getting root access.
+
+RUN useradd -ms /bin/bash lolcat => This allows you to create a user named lolcat.
+
+COPY index.js /home/node/code/index.js
+ADD index.js /home/node/code/index.js
+Both the commands above have the same purpose, to place the files(s) within the container. 
+  The ADD command however, has some extra functionality (adding remote URLS, unzipping files). 
+  Use it only if you need that additional functionality.
+
+WORKDIR /app => Creates the working directory
+We can do WORKDIR /home/node/code/ so that way, when you write COPY index.js /home/node/code/index.js, you don't 
+  need to write /home/node/code/index.js, but rather . (since we changed the default directory)
+
+ADDING NPM DEPENDENCIES TO A NODE APP:
+When you have an application that contains dependencies, you need to:
+1. Copy all these new files, including package.json
+2. Install these new dependencies
+
+DOCKERIGNORE FILE:
+We create a dockerignore (.dockerignore) file, which is similar to a .gitignore file.
+
+Note: It is usually recommended to download your package.json dependencies early in the Dockerfile.
+  This way, we can pull from the cache, which massively decreases our build time.
+
+Note 2: Using alpine/slim distro's can help reduce the size of the container, thus improving build time.
+  Don't over optimize this step, but try to use when possible.
