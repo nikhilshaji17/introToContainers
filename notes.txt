@@ -187,4 +187,60 @@ Some packages are unnecessary for our production container (npm), and don't have
 
 DISTROLESS:
 This is the most barebones you can get. There is no package manager here, so you'd need to install it yourself.
-  
+
+Docker scout:
+This allows you to scan your containers for vulnerabilities.
+
+Bind Mounts:
+Usually, our containers are stateless, i.e, they contain the required logic within themselves, with
+  no external dependency.
+
+Occasionally however, we will need our containers to "remember" stuff. We will need them to read-and-write
+  to the host. This is where we need bind mounts and volumes.
+
+Bind mounts allow you to mount files from host computer to container. These files can be decided when 
+  you run your container. (So the files can be dynamic, get it? You can have pdf1 right now, then 
+    replace it on the fly with pdf2. They are baked into the container like at build time)
+
+So suppose you have a NodeJS server, and you want to run it on a Linux environment, and you 
+  want to do active development on it. A bind mount allows us to do this, and the changes will reflect
+  in our container.
+
+docker run --mount type=bind,source="$(pwd)"/dist,target=/usr/share/nginx/html -p 8080:80 nginx:latest
+
+--mount type=bind allows us to connect this bind mount to our container.
+
+Bind mounts are for sharing data with your container. Also, the relationship is 2-way, i.e,
+  saving anything in your bind mount will save it in local, and vice versa.
+
+Volumes:
+Volumes are for maintaining state in your container between runs. (like a db? I am assuming this)
+You can have multiple containers referencing the same volume as well.
+It allows us to save state between runs, which you can't regularly do with containers.
+
+docker run --rm --env DATA_PATH=/data/num.txt --mount type=volume,src=incrementor-data,target=/data incrementor
+--env = environment variables
+src = the volume you want to use
+target = where the target has to be accessed from
+
+There are also 2 other types of mounts as well: tmpfs and npipes
+
+tmpfs imitates a file system but actually keeps everything in memory. This is useful for mounting in secrets 
+  like database keys or anything that wouldn't be persisted between container launches but you don't want 
+  to add to the Dockerfile.
+
+npipes is for mounting third party tools for Windows containers.
+
+Dev containers:
+We can create dev containers for spinning up development containers instantly.
+Instead of created a venv and downloading dependencies, we can use this instead.
+
+docker network create --driver=bridge app-net
+The --driver flag allows you to decide which "type" of virtual network to use
+
+If you have multiple containers to manage, we need a container orchestration tool.
+We use Kubernetes.
+
+Docker Compose = Perfect for local use cases, where you need 3 or 5 containers spun up.
+(Example is a node server, react frontend, mongo database and so on)
+
